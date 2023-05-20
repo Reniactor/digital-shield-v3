@@ -1,7 +1,7 @@
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import { Trispace } from "next/font/google";
-import NavBar from "./header.jsx";
+import NavBar from "./components/header.jsx";
 import Hero from "./components/hero/hero";
 
 const trispace = Trispace({ subsets: ["latin"] });
