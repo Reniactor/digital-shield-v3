@@ -12,3 +12,7 @@ input[type="search"]::-webkit-search-results-decoration {
 html {
   scroll-behavior: smooth;
 }
+
+body {
+  margin: 0;
+}
