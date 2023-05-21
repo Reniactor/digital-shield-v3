@@ -13,9 +13,14 @@
   "dependencies": {
     "@thirdweb-dev/react": "^3",
     "@thirdweb-dev/sdk": "^3",
+    "bootstrap": "^5.2.3",
+    "choices.js": "^10.2.0",
+    "ethereumjs-util": "^7.1.5",
     "ethers": "^5",
+    "firebase": "^9.22.0",
     "next": "^13",
     "react": "^18.2",
+    "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2"
   },
   "devDependencies": {

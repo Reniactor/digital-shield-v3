@@ -1,5 +1,14 @@
-import styles from "../styles/Home.module.css";
+import { Trispace } from "next/font/google";
+import NavBar from "./components/header.jsx";
+import Hero from "./components/hero/hero";
 
 export default function Home() {
-  return <main></main>;
+  return (
+    <main
+      className={`font-trispace flex flex-col items-center bg-background-color-website min-h-screen min-w-full text-base-text-color`}
+    >
+      <NavBar />
+      <Hero />
+    </main>
+  );
 }

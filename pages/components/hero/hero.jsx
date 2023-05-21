@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Aero_03 from "next/font/local";
-import SubmitNft from "../submitnft/submitnft";
+import SubmitNFT from "../submitnft/submitnft";
 
 const aero = Aero_03({
   src: "../../../public/AERO_03.ttf",
@@ -30,7 +30,7 @@ const hero = () => {
         className="flex justify-center w-full mt-10"
         aria-label="page input fields to lock cryptos and images"
       >
-        <SubmitNft />
+        <SubmitNFT />
       </div>
     </div>
   );

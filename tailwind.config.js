@@ -45,6 +45,9 @@ module.exports = {
         titleWhite: "#c6c4c8",
         "connect-wallet-colors": "rgb(62, 62, 62)",
       },
+      fontFamily: {
+        trispace: ["Trispace"],
+      },
     },
   },
   plugins: [],
