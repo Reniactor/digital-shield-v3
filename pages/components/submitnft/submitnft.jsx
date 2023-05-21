@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useAddress } from "@thirdweb-dev/react";
 import { isValidAddress } from "ethereumjs-util";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db } from "../../firebaseConfig";
+import { db } from "../../../config/firebaseConfig";
 import {
   collection,
   getDocs,
