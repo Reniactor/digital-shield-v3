@@ -2,7 +2,7 @@ import { useAddress } from "@thirdweb-dev/react";
 import NavBar from "./components/header";
 import Nftcard from "./components/nftcard/nftcard";
 
-const received = () => {
+const Received = () => {
   const walletAddress = useAddress();
 
   return (
@@ -16,4 +16,4 @@ const received = () => {
     </main>
   );
 };
-export default received;
+export default Received;

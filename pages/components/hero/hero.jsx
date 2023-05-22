@@ -7,7 +7,7 @@ const aero = Aero_03({
   subsets: ["Latin"],
 });
 
-const hero = () => {
+const Hero = () => {
   return (
     <div className="mt-28 w-[85%] max-w-2xl flex flex-col items-center">
       <h1
@@ -36,4 +36,4 @@ const hero = () => {
   );
 };
 
-export default hero;
+export default Hero;

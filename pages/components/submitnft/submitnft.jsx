@@ -301,6 +301,7 @@ function SubmitNFT() {
                   accept="image/*"
                   className="absolute inset-0 w-4/5 h-full opacity-0 cursor-pointer"
                   onChange={handleImageUpload}
+                  required
                 />
               </div>
             </div>
