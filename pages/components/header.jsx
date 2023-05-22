@@ -47,15 +47,19 @@ export default function NavBar() {
           theme="dark"
           className="!bg-transparent !border-none !max-h-full !text-blue-accent hover:!text-base-text-color !transition-transform !duration-700"
         />
-        <DropdownButton id="dropdown-basic-button" title="">
-          {links.map(({ name, route }, index) => {
-            return (
-              <Dropdown.Item href={route} key={index}>
-                {name}
-              </Dropdown.Item>
-            );
-          })}
-        </DropdownButton>
+        {address ? (
+          <DropdownButton id="dropdown-basic-button" title="">
+            {links.map(({ name, route }, index) => {
+              return (
+                <Dropdown.Item href={route} key={index}>
+                  {name}
+                </Dropdown.Item>
+              );
+            })}
+          </DropdownButton>
+        ) : (
+          ""
+        )}
       </div>
     </header>
   );
