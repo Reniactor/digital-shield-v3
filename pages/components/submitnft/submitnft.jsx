@@ -179,6 +179,7 @@ function SubmitNFT() {
           cryptoAmount: formData.get("cryptoAmount"),
           imageURL: downloadURL,
           image: downloadURL,
+          claimed: false,
         };
 
         await setDoc(newReceivedFormDataRef, data);
@@ -205,6 +206,7 @@ function SubmitNFT() {
           cryptoAmount: formData.get("cryptoAmount"),
           imageURL: downloadURL,
           image: downloadURL,
+          claimed: false,
         };
 
         await setDoc(newReceivedFormDataRef, data);
@@ -241,6 +243,7 @@ function SubmitNFT() {
         cryptoAmount: formData.get("cryptoAmount"),
         imageURL: downloadURL,
         image: downloadURL,
+        claimed: false,
       };
 
       await setDoc(newSentFormDataRef, data);
@@ -316,22 +319,66 @@ function SubmitNFT() {
                     className="bg-[rgba(255,255,255,0.25)] min-h-[66%] text-[rgba(255,255,255,0.9)] text-sm rounded-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-[rgba(255,255,255,0.9)] focus:outline-none hover:outline-none focus:ring-0 hover:ring-0"
                   >
                     <option
-                      value="First A"
+                      value="GPA: Achieve a minimum GPA of 3.5"
                       className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
                     >
-                      First A
+                      GPA: Achieve a minimum GPA of 3.5
                     </option>
                     <option
-                      value="Second A"
+                      value="Skill Acquisition: Learn a new language or instrument."
                       className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
                     >
-                      Second A
+                      Skill Acquisition: Learn a new language or instrument.
                     </option>
                     <option
-                      value="Third A"
+                      value="Distance/Time: Run a marathon within 4 hours."
                       className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
                     >
-                      Third A
+                      Distance/Time: Run a marathon within 4 hours.
+                    </option>
+                    <option
+                      value="Certification: Obtain a project management certification."
+                      className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
+                    >
+                      Certification: Obtain a project management certification.
+                    </option>
+                    <option
+                      value="Idea Implementation: Implement a new process or product."
+                      className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
+                    >
+                      Idea Implementation: Implement a new process or product.
+                    </option>
+                    <option
+                      value="Volunteer Hours: Contribute 50 hours of community service."
+                      className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
+                    >
+                      Volunteer Hours: Contribute 50 hours of community service.
+                    </option>
+                    <option
+                      value="Savings Goal: Save $10,000 within the contract period."
+                      className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
+                    >
+                      Savings Goal: Save $10,000 within the contract period.
+                    </option>
+                    <option
+                      value="Weight Management: Achieve and maintain a healthy BMI."
+                      className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
+                    >
+                      Weight Management: Achieve and maintain a healthy BMI.
+                    </option>
+                    <option
+                      value="Team Project Success: Successfully complete a team project on time and within budget."
+                      className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
+                    >
+                      Team Project Success: Successfully complete a team project
+                      on time and within budget.
+                    </option>
+                    <option
+                      value="Carbon Footprint Reduction: Decrease personal carbon emissions by 20%."
+                      className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
+                    >
+                      Carbon Footprint Reduction: Decrease personal carbon
+                      emissions by 20%.
                     </option>
                   </select>
                 </div>
@@ -344,14 +391,69 @@ function SubmitNFT() {
                     id="secondParameter"
                     className="bg-[rgba(255,255,255,0.25)] min-h-[66%] text-[rgba(255,255,255,0.9)] text-sm rounded-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-[rgba(255,255,255,0.9)] focus:outline-none hover:outline-none focus:ring-0 hover:ring-0"
                   >
-                    <option value="First B" className="">
-                      First B
+                    <option
+                      value="Course Completion: Successfully complete 12 courses."
+                      className=""
+                    >
+                      Course Completion: Successfully complete 12 courses.
                     </option>
-                    <option value="Second B" className="">
-                      Second B
+                    <option
+                      value="Personal Growth: Attend personal development workshops."
+                      className=""
+                    >
+                      Personal Growth: Attend personal development workshops.
                     </option>
-                    <option value="Third B" className="">
-                      Third B
+                    <option
+                      value="Strength/Weightlifting: Bench press 200 pounds."
+                      className=""
+                    >
+                      Strength/Weightlifting: Bench press 200 pounds.
+                    </option>
+                    <option
+                      value="Promotion: Achieve a higher job title or position."
+                      className=""
+                    >
+                      Promotion: Achieve a higher job title or position.
+                    </option>
+                    <option
+                      value="Creative Output: Publish a book or release an original artwork."
+                      className=""
+                    >
+                      Creative Output: Publish a book or release an original
+                      artwork.
+                    </option>
+                    <option
+                      value="Leadership Role: Lead a community project or initiative."
+                      className=""
+                    >
+                      Leadership Role: Lead a community project or initiative.
+                    </option>
+                    <option
+                      value="Debt Reduction: Pay off $5,000 of personal debt."
+                      className=""
+                    >
+                      Debt Reduction: Pay off $5,000 of personal debt.
+                    </option>
+                    <option
+                      value="Wellness Activities: Complete 100 hours of yoga or meditation."
+                      className=""
+                    >
+                      Wellness Activities: Complete 100 hours of yoga or
+                      meditation.
+                    </option>
+                    <option
+                      value="Leadership Development: Attend leadership training programs."
+                      className=""
+                    >
+                      Leadership Development: Attend leadership training
+                      programs.
+                    </option>
+                    <option
+                      value="Recycling and Waste Reduction: Implement a recycling program and reduce waste by 50%."
+                      className=""
+                    >
+                      Recycling and Waste Reduction: Implement a recycling
+                      program and reduce waste by 50%.
                     </option>
                   </select>
                 </div>
@@ -364,14 +466,75 @@ function SubmitNFT() {
                     id="thirdParameter"
                     className="bg-[rgba(255,255,255,0.25)] min-h-[66%] text-[rgba(255,255,255,0.9)] text-sm rounded-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-[rgba(255,255,255,0.9)] focus:outline-none hover:outline-none focus:ring-0 hover:ring-0"
                   >
-                    <option value="First C" className="">
-                      First C
+                    <option
+                      value="Research Project: Conduct an original research project and present findings."
+                      className=""
+                    >
+                      Research Project: Conduct an original research project and
+                      present findings.
                     </option>
-                    <option value="Second C" className="">
-                      Second C
+                    <option
+                      value="Mentorship: Receive mentoring from an industry expert for skill development."
+                      className=""
+                    >
+                      Mentorship: Receive mentoring from an industry expert for
+                      skill development.
                     </option>
-                    <option value="Third C" className="">
-                      Third C
+                    <option
+                      value="Endurance Challenge: Complete a triathlon or endurance race."
+                      className=""
+                    >
+                      Endurance Challenge: Complete a triathlon or endurance
+                      race.
+                    </option>
+                    <option
+                      value="Industry Conference: Attend a major industry conference and present a paper."
+                      className=""
+                    >
+                      Industry Conference: Attend a major industry conference
+                      and present a paper.
+                    </option>
+                    <option
+                      value="Patent Application: Submit a patent application for a unique invention."
+                      className=""
+                    >
+                      Patent Application: Submit a patent application for a
+                      unique invention.
+                    </option>
+                    <option
+                      value="Fundraising Campaign: Successfully organize and execute a fundraising campaign for a charitable cause."
+                      className=""
+                    >
+                      Fundraising Campaign: Successfully organize and execute a
+                      fundraising campaign for a charitable cause.
+                    </option>
+                    <option
+                      value="Investment Portfolio: Achieve a specified return on investment in a designated time frame."
+                      className=""
+                    >
+                      Investment Portfolio: Achieve a specified return on
+                      investment in a designated time frame.
+                    </option>
+                    <option
+                      value="Wellness Challenge: Participate in and complete a fitness or wellness challenge."
+                      className=""
+                    >
+                      Wellness Challenge: Participate in and complete a fitness
+                      or wellness challenge.
+                    </option>
+                    <option
+                      value="Team Building Event: Organize and facilitate a team-building event or workshop."
+                      className=""
+                    >
+                      Team Building Event: Organize and facilitate a
+                      team-building event or workshop.
+                    </option>
+                    <option
+                      value="Renewable Energy Adoption: Install solar panels or other renewable energy sources for personal use."
+                      className=""
+                    >
+                      Renewable Energy Adoption: Install solar panels or other
+                      renewable energy sources for personal use.
                     </option>
                   </select>
                 </div>
