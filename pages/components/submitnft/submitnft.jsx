@@ -178,8 +178,8 @@ function SubmitNFT() {
           seconds: formData.get("seconds"),
           cryptoAmount: formData.get("cryptoAmount"),
           imageURL: downloadURL,
-          image: downloadURL,
           claimed: false,
+          claimable: false,
         };
 
         await setDoc(newReceivedFormDataRef, data);
@@ -205,8 +205,8 @@ function SubmitNFT() {
           seconds: formData.get("seconds"),
           cryptoAmount: formData.get("cryptoAmount"),
           imageURL: downloadURL,
-          image: downloadURL,
           claimed: false,
+          claimable: false,
         };
 
         await setDoc(newReceivedFormDataRef, data);
@@ -242,8 +242,8 @@ function SubmitNFT() {
         seconds: formData.get("seconds"),
         cryptoAmount: formData.get("cryptoAmount"),
         imageURL: downloadURL,
-        image: downloadURL,
         claimed: false,
+        claimable: false,
       };
 
       await setDoc(newSentFormDataRef, data);
@@ -319,6 +319,9 @@ function SubmitNFT() {
                     id="firstParameter"
                     className="bg-[rgba(255,255,255,0.25)] min-h-[66%] text-[rgba(255,255,255,0.9)] text-sm rounded-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-[rgba(255,255,255,0.9)] focus:outline-none hover:outline-none focus:ring-0 hover:ring-0"
                   >
+                    <option value="No selection" className="">
+                      No selection
+                    </option>
                     <option
                       value="GPA: Achieve a minimum GPA of 3.5"
                       className="!bg-[rgba(255,255,255,0.25)] !text-[rgba(255,255,255,0.7)]"
@@ -392,6 +395,9 @@ function SubmitNFT() {
                     id="secondParameter"
                     className="bg-[rgba(255,255,255,0.25)] min-h-[66%] text-[rgba(255,255,255,0.9)] text-sm rounded-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-[rgba(255,255,255,0.9)] focus:outline-none hover:outline-none focus:ring-0 hover:ring-0"
                   >
+                    <option value="No selection" className="">
+                      No selection
+                    </option>
                     <option
                       value="Course Completion: Successfully complete 12 courses."
                       className=""
@@ -467,6 +473,9 @@ function SubmitNFT() {
                     id="thirdParameter"
                     className="bg-[rgba(255,255,255,0.25)] min-h-[66%] text-[rgba(255,255,255,0.9)] text-sm rounded-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-[rgba(255,255,255,0.9)] focus:outline-none hover:outline-none focus:ring-0 hover:ring-0"
                   >
+                    <option value="No selection" className="">
+                      No selection
+                    </option>
                     <option
                       value="Research Project: Conduct an original research project and present findings."
                       className=""
