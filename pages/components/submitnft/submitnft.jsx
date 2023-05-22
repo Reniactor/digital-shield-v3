@@ -52,7 +52,7 @@ function SubmitNFT() {
 
   useEffect(() => {
     const createUserOnce = async () => {
-      if (address) {
+      if (address && address !== undefined) {
         try {
           // Check if the user already exists
           const userQuery = query(
@@ -66,6 +66,8 @@ function SubmitNFT() {
             await addDoc(usersCollectionRef, { wallet: address });
           } else {
             // User already exists
+            console.log(address);
+            console.log("User already exists!");
           }
         } catch (error) {
           console.log(error);
@@ -141,29 +143,33 @@ function SubmitNFT() {
       // Upload the image file
       const imageFile = formData.get("imagefile");
       const storage = getStorage();
-      const imageStorageRef = ref(storage, "images"); // Storage reference without document ID
+      const originalFileName = imageFile.name;
+      const imageStorageRef = ref(storage, `images/${originalFileName}`); // Store the image with the original file name
       const imageSnapshot = await uploadBytes(imageStorageRef, imageFile);
 
       // Get the download URL of the uploaded image
       const downloadURL = await getDownloadURL(imageSnapshot.ref);
 
-      // Find the user by wallet address
+      // Find the user by wallet address for receivedFormData
       const usersCollectionRef = collection(db, "users");
       const userQuery = query(
         usersCollectionRef,
-        where("wallet", "==", walletAddress)
+        where("wallet", "==", recipientAddress)
       );
       const userQuerySnapshot = await getDocs(userQuery);
 
       if (!userQuerySnapshot.empty) {
-        // User found, create a new formData document
+        // User found, assign the receivedFormData document
         const userDataRef = doc(db, "users", userQuerySnapshot.docs[0].id);
-        const formDataCollectionRef = collection(userDataRef, "formDatas");
-        const newFormDataRef = doc(formDataCollectionRef); // Generates a new document ID
+        const receivedFormDataCollectionRef = collection(
+          userDataRef,
+          "receivedFormData"
+        );
+        const newReceivedFormDataRef = doc(receivedFormDataCollectionRef);
 
-        // Update data with image URL and save the formData
+        // Update data with image URL and save the receivedFormData
         const data = {
-          recipientAddress: formData.get("recipientAddress"),
+          senderAddress: walletAddress,
           firstParameter: formData.get("firstParameter"),
           secondParameter: formData.get("secondParameter"),
           thirdParameter: formData.get("thirdParameter"),
@@ -175,18 +181,21 @@ function SubmitNFT() {
           image: downloadURL,
         };
 
-        await setDoc(newFormDataRef, data);
+        await setDoc(newReceivedFormDataRef, data);
       } else {
-        // User not found, create a new user with formData
+        // User not found, create a new user with receivedFormData
         const newUserRef = await addDoc(usersCollectionRef, {
-          wallet: walletAddress,
+          wallet: recipientAddress,
         });
-        const formDataCollectionRef = collection(newUserRef, "formDatas");
-        const newFormDataRef = doc(formDataCollectionRef); // Generates a new document ID
+        const receivedFormDataCollectionRef = collection(
+          newUserRef,
+          "receivedFormData"
+        );
+        const newReceivedFormDataRef = doc(receivedFormDataCollectionRef);
 
-        // Update data with image URL and save the formData
+        // Update data with image URL and save the receivedFormData
         const data = {
-          recipientAddress: formData.get("recipientAddress"),
+          senderAddress: walletAddress,
           firstParameter: formData.get("firstParameter"),
           secondParameter: formData.get("secondParameter"),
           thirdParameter: formData.get("thirdParameter"),
@@ -198,8 +207,29 @@ function SubmitNFT() {
           image: downloadURL,
         };
 
-        await setDoc(newFormDataRef, data);
+        await setDoc(newReceivedFormDataRef, data);
       }
+
+      // Create and assign the sentFormData document
+      const userDataRef = doc(db, "users", userQuerySnapshot.docs[0].id);
+      const sentFormDataCollectionRef = collection(userDataRef, "sentFormData");
+      const newSentFormDataRef = doc(sentFormDataCollectionRef);
+
+      // Update data with image URL and save the sentFormData
+      const data = {
+        recipientAddress: recipientAddress,
+        firstParameter: formData.get("firstParameter"),
+        secondParameter: formData.get("secondParameter"),
+        thirdParameter: formData.get("thirdParameter"),
+        hours: formData.get("hours"),
+        minutes: formData.get("minutes"),
+        seconds: formData.get("seconds"),
+        cryptoAmount: formData.get("cryptoAmount"),
+        imageURL: downloadURL,
+        image: downloadURL,
+      };
+
+      await setDoc(newSentFormDataRef, data);
 
       form.reset();
     } catch (error) {

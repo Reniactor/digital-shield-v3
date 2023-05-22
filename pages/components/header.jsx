@@ -42,7 +42,7 @@ export default function NavBar() {
       <Link href="/">
         <Image src={logo} alt="logo" className="h-12 w-auto" priority />
       </Link>
-      <div className="flex min-w-[240px] max-w-[245px] justify-between items-center">
+      <div className="flex min-w-[270px] max-w-[270px] justify-between items-center">
         <ConnectWallet
           theme="dark"
           className="!bg-transparent !border-none !max-h-full !text-blue-accent hover:!text-base-text-color !transition-transform !duration-700"

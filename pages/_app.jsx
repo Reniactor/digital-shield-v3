@@ -1,4 +1,4 @@
-import { ThirdwebProvider } from "@thirdweb-dev/react";
+import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import Head from "next/head";
 
@@ -9,7 +9,10 @@ const activeChain = "polygon";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThirdwebProvider activeChain={activeChain}>
+    <ThirdwebProvider
+      activeChain={activeChain}
+      desiredChainId={ChainId.Polygon}
+    >
       <Head>
         <title>Digital Shield</title>
         <link
