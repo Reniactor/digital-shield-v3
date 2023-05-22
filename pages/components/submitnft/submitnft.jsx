@@ -210,9 +210,23 @@ function SubmitNFT() {
         await setDoc(newReceivedFormDataRef, data);
       }
 
+      const senderUsersCollectionRef = collection(db, "users");
+      const senderUserQuery = query(
+        senderUsersCollectionRef,
+        where("wallet", "==", walletAddress)
+      );
+      const senderUserQuerySnapshot = await getDocs(senderUserQuery);
+
       // Create and assign the sentFormData document
-      const userDataRef = doc(db, "users", userQuerySnapshot.docs[0].id);
-      const sentFormDataCollectionRef = collection(userDataRef, "sentFormData");
+      const senderUserDataRef = doc(
+        db,
+        "users",
+        senderUserQuerySnapshot.docs[0].id
+      );
+      const sentFormDataCollectionRef = collection(
+        senderUserDataRef,
+        "sentFormData"
+      );
       const newSentFormDataRef = doc(sentFormDataCollectionRef);
 
       // Update data with image URL and save the sentFormData
