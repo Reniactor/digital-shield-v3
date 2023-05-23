@@ -22,7 +22,7 @@ export default function NavBar() {
     },
   ];
   if (address == process.env.NEXT_PUBLIC_ADMINWALLET)
-    links.push({ name: "Admin", route: "/admin" });
+    links.push({ name: "Admin", route: `/${NEXT_PUBLIC_ADMINWALLET}` });
   return (
     <header
       className="flex 

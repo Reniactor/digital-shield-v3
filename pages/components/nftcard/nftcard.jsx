@@ -51,7 +51,7 @@ const Nftcard = ({
         className="max-w-[110px] max-h-[110px] overflow-hidden w-auto"
       />
       <div className="w-4/5 flex flex-col items-center">
-        <h1>To do's:</h1>
+        <h1>To dos:</h1>
         <h2>{param1}</h2>
         <h2>{param2}</h2>
         <h2>{param3}</h2>
