@@ -4,6 +4,12 @@ import { Trispace } from "next/font/google";
 import upload from "/public/alt upload image.png";
 import cryptoUpArrow from "/public/crypto value up arrow.png";
 import cryptoDownArrow from "/public/crypto value down arrow.png";
+import {
+  useContract,
+  useContractRead,
+  useContractWrite,
+  useContractEvents,
+} from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 import { useAddress } from "@thirdweb-dev/react";
 import { isValidAddress } from "ethereumjs-util";
@@ -20,6 +26,7 @@ import {
   updateDoc,
   setDoc,
 } from "firebase/firestore";
+import { ethers } from "ethers";
 
 const titleWhite = "#c6c4c8";
 
@@ -36,6 +43,18 @@ function SubmitNFT() {
   const [users, setUsers] = useState([]);
   const usersCollectionRef = collection(db, "users");
   const address = useAddress() || null;
+  const { contract } = useContract(
+    `${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`
+  );
+  const { mutateAsync, isLoading, error } = useContractWrite(
+    contract,
+    "createLock"
+  );
+  const {
+    data: useContractEventsData,
+    isLoading: useContractEventsIsLoading,
+    error: useContractEventsError,
+  } = useContractEvents(contract, "LockCreated");
 
   useEffect(() => {
     const getUsers = async () => {
@@ -66,8 +85,6 @@ function SubmitNFT() {
             await addDoc(usersCollectionRef, { wallet: address });
           } else {
             // User already exists
-            console.log(address);
-            console.log("User already exists!");
           }
         } catch (error) {
           console.log(error);
@@ -124,13 +141,20 @@ function SubmitNFT() {
 
   // Function to handle form submission
 
-  const handleSubmit = async (event, walletAddress) => {
+  const HandleSubmit = async (event, walletAddress) => {
     event.preventDefault();
-
+    const randomNumber = Math.floor(Math.random() * 1000000000) + 1;
     const form = document.getElementById("uploadForm");
     const formData = new FormData(form);
-
     const recipientAddress = formData.get("recipientAddress");
+    const hours = Number(formData.get("hours")) || 0;
+    const minutes = Number(formData.get("minutes")) || 0;
+    const seconds = Number(formData.get("seconds")) || 1;
+    const timeForContract = hours * 3600 + minutes * 60 + seconds;
+    const cryptoAmountForContract =
+      Number(formData.get("cryptoAmount").replace("$", "")) *
+        1000000000000000000 || 1000000000000000000;
+    const nativeTokenValue = cryptoAmountForContract / 1000000000000000000;
 
     // Validate recipient address as a wallet address
     if (!recipientAddress || !isValidAddress(recipientAddress)) {
@@ -140,8 +164,28 @@ function SubmitNFT() {
     }
 
     try {
+      await mutateAsync({
+        args: [
+          randomNumber,
+          recipientAddress,
+          ethers.utils.parseEther(`${nativeTokenValue}`),
+          timeForContract,
+        ],
+        overrides: {
+          value: ethers.utils.parseEther(
+            `${nativeTokenValue + nativeTokenValue * 0.05}`
+          ),
+        },
+      });
+      const contractEventData = await useContractEventsData;
+      console.log(contractEventData);
       // Upload the image file
       const imageFile = formData.get("imagefile");
+      if (!imageFile) {
+        // Image file not selected
+        alert("Please upload an image.");
+        return;
+      }
       const storage = getStorage();
       const originalFileName = imageFile.name;
       const imageStorageRef = ref(storage, `images/${originalFileName}`); // Store the image with the original file name
@@ -169,13 +213,11 @@ function SubmitNFT() {
 
         // Update data with image URL and save the receivedFormData
         const data = {
+          lockId: randomNumber,
           senderAddress: walletAddress,
           firstParameter: formData.get("firstParameter"),
           secondParameter: formData.get("secondParameter"),
           thirdParameter: formData.get("thirdParameter"),
-          hours: formData.get("hours"),
-          minutes: formData.get("minutes"),
-          seconds: formData.get("seconds"),
           cryptoAmount: formData.get("cryptoAmount"),
           imageURL: downloadURL,
           claimed: false,
@@ -196,13 +238,11 @@ function SubmitNFT() {
 
         // Update data with image URL and save the receivedFormData
         const data = {
+          lockId: randomNumber,
           senderAddress: walletAddress,
           firstParameter: formData.get("firstParameter"),
           secondParameter: formData.get("secondParameter"),
           thirdParameter: formData.get("thirdParameter"),
-          hours: formData.get("hours"),
-          minutes: formData.get("minutes"),
-          seconds: formData.get("seconds"),
           cryptoAmount: formData.get("cryptoAmount"),
           imageURL: downloadURL,
           claimed: false,
@@ -233,13 +273,11 @@ function SubmitNFT() {
 
       // Update data with image URL and save the sentFormData
       const data = {
+        lockId: randomNumber,
         recipientAddress: recipientAddress,
         firstParameter: formData.get("firstParameter"),
         secondParameter: formData.get("secondParameter"),
         thirdParameter: formData.get("thirdParameter"),
-        hours: formData.get("hours"),
-        minutes: formData.get("minutes"),
-        seconds: formData.get("seconds"),
         cryptoAmount: formData.get("cryptoAmount"),
         imageURL: downloadURL,
         claimed: false,
@@ -280,7 +318,7 @@ function SubmitNFT() {
         <form
           id="uploadForm"
           className="h-full w-4/5 text-[rgba(255,255,255,0.7)]"
-          onSubmit={(event) => handleSubmit(event, address)}
+          onSubmit={(event) => HandleSubmit(event, address)}
           noValidate
         >
           <div className="h-full w-full bg-[rgba(255,255,255,0.25)] rounded-xl flex flex-col justify-between">
