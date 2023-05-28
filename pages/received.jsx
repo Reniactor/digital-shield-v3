@@ -64,6 +64,7 @@ const Received = () => {
             cryptoAmount={data.cryptoAmount}
             claimable={data.claimable}
             claimed={data.claimed}
+            id={data.lockId}
           />
         ))}
       </div>

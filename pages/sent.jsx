@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { db } from "../config/firebaseConfig";
 import { collection, getDocs, query, where, doc } from "firebase/firestore";
-import { useAddress } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  useContractEvents,
+  useContract,
+} from "@thirdweb-dev/react";
 import NavBar from "./components/header";
 import Nftcard from "./components/nftcard/nftcard";
 
@@ -59,9 +63,6 @@ const Sent = () => {
             param1={data.firstParameter}
             param2={data.secondParameter}
             param3={data.thirdParameter}
-            hours={data.hours}
-            minutes={data.minutes}
-            seconds={data.seconds}
             cryptoAmount={data.cryptoAmount}
             claimable={data.claimable}
             claimed={data.claimed}

@@ -1,30 +1,114 @@
-import { useContract, useContractWrite } from "@thirdweb-dev/react";
+import {
+  useContract,
+  useContractWrite,
+  useContractEvents,
+  useAddress,
+} from "@thirdweb-dev/react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const Nftcard = ({
   imageURL,
   param1,
   param2,
   param3,
-  hours,
-  minutes,
-  seconds,
   cryptoAmount,
   claimable,
   claimed,
   id,
 }) => {
+  // Get the contract address
   const { contract } = useContract(
     `${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`
   );
+  // Get the contract to release cryptos (only in sent page)
   const { mutateAsync, isLoading, error } = useContractWrite(
     contract,
     "release"
   );
-  const handleClick = async () =>
+
+  const [epochTime, setEpochTime] = useState(0);
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
+  const address = useAddress();
+
+  function getTimeUntil(timestamp) {
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const timeDifference = timestamp - currentTimestamp;
+
+    if (timeDifference <= 0) {
+      setHours("00");
+      setMinutes("00");
+      setSeconds("00");
+      return;
+    }
+
+    const hoursToCalc = Math.floor(timeDifference / (60 * 60));
+    const minutesToCalc = Math.floor((timeDifference % (60 * 60)) / 60);
+    const secondsToCalc = Math.floor(timeDifference % 60);
+
+    const hoursString =
+      hoursToCalc < 10 ? "0" + hoursToCalc : hoursToCalc.toString();
+    const minutesString =
+      minutesToCalc < 10 ? "0" + minutesToCalc : minutesToCalc.toString();
+    const secondsString =
+      secondsToCalc < 10 ? "0" + secondsToCalc : secondsToCalc.toString();
+
+    setHours(hoursString);
+    setMinutes(minutesString);
+    setSeconds(secondsString);
+  }
+
+  const {
+    data: contractData,
+    isLoading: contractDataIsLoading,
+    error: contractDataError,
+  } = useContractEvents(contract, "LockCreated", {
+    queryFilter: {
+      subscribe: true,
+    },
+  });
+
+  useEffect(() => {
+    const getContractData = async () => {
+      if (!contractDataIsLoading) {
+        try {
+          const rawData = await contractData;
+          const dataToProcess = [];
+          rawData.map((element) =>
+            parseInt(element.data.lockId._hex, 16) === id
+              ? dataToProcess.push(element.data)
+              : null
+          );
+          console.log(dataToProcess);
+          setEpochTime(parseInt(dataToProcess[0].releaseTime._hex, 16));
+          const unixTime = epochTime;
+          getTimeUntil(unixTime);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    getContractData();
+  }, [contractDataIsLoading]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const unixTime = epochTime;
+      getTimeUntil(unixTime);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [epochTime]);
+
+  const handleReleaseClick = async () =>
     await mutateAsync({
       args: [id],
     });
+
   return (
     <div
       style={{
@@ -74,7 +158,7 @@ const Nftcard = ({
         <button
           type="button"
           className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
-          onClick={handleClick}
+          onClick={handleReleaseClick}
         >
           Release!
         </button>
