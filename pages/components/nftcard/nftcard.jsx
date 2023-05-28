@@ -27,7 +27,7 @@ const Nftcard = ({
     "release"
   );
 
-  const [epochTime, setEpochTime] = useState(0);
+  const [epochTime, setEpochTime] = useState(NaN);
   const [hours, setHours] = useState("");
   const [minutes, setMinutes] = useState("");
   const [seconds, setSeconds] = useState("");
@@ -37,7 +37,6 @@ const Nftcard = ({
   function getTimeUntil(timestamp) {
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const timeDifference = timestamp - currentTimestamp;
-
     if (timeDifference <= 0) {
       setHours("00");
       setMinutes("00");
@@ -74,7 +73,7 @@ const Nftcard = ({
 
   useEffect(() => {
     const getContractData = async () => {
-      if (!contractDataIsLoading) {
+      if (contractDataIsLoading === false) {
         try {
           const rawData = await contractData;
           const dataToProcess = [];
@@ -84,8 +83,6 @@ const Nftcard = ({
               : null
           );
           setEpochTime(parseInt(dataToProcess[0].releaseTime._hex, 16));
-          const unixTime = epochTime;
-          getTimeUntil(unixTime);
         } catch (error) {
           console.log(error);
         }
@@ -93,6 +90,13 @@ const Nftcard = ({
     };
     getContractData();
   }, [contractDataIsLoading]);
+
+  useEffect(() => {
+    console.log(epochTime);
+    if (epochTime > 0) {
+      getTimeUntil(epochTime);
+    }
+  }, [epochTime]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -105,10 +109,15 @@ const Nftcard = ({
     };
   }, [epochTime]);
 
-  const handleReleaseClick = async () =>
-    await mutateAsync({
-      args: [id],
-    });
+  const handleReleaseClick = async () => {
+    try {
+      await mutateAsync({
+        args: [id],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div
@@ -174,7 +183,7 @@ const Nftcard = ({
       ) : releasable == false ? (
         <button
           type="button"
-          className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
+          className="rounded-md w-24 h-12 bg-red-900 text-titleWhite hover:bg-titleWhite hover:text-red-900  duration-500"
           disabled
         >
           Not yet!
