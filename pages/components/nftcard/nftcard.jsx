@@ -31,6 +31,7 @@ const Nftcard = ({
   const [hours, setHours] = useState("");
   const [minutes, setMinutes] = useState("");
   const [seconds, setSeconds] = useState("");
+  const [releasable, setReleasable] = useState(false);
   const address = useAddress();
 
   function getTimeUntil(timestamp) {
@@ -41,6 +42,7 @@ const Nftcard = ({
       setHours("00");
       setMinutes("00");
       setSeconds("00");
+      setReleasable(true);
       return;
     }
 
@@ -81,7 +83,6 @@ const Nftcard = ({
               ? dataToProcess.push(element.data)
               : null
           );
-          console.log(dataToProcess);
           setEpochTime(parseInt(dataToProcess[0].releaseTime._hex, 16));
           const unixTime = epochTime;
           getTimeUntil(unixTime);
@@ -154,13 +155,29 @@ const Nftcard = ({
         <h1>Crypto amount:</h1>
         <h2>{cryptoAmount}</h2>
       </div>
-      {id ? (
+      {isLoading ? (
+        <button
+          type="button"
+          className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
+          disabled
+        >
+          Loading...
+        </button>
+      ) : releasable ? (
         <button
           type="button"
           className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
           onClick={handleReleaseClick}
         >
           Release!
+        </button>
+      ) : releasable == false ? (
+        <button
+          type="button"
+          className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
+          disabled
+        >
+          Not yet!
         </button>
       ) : (
         ""
