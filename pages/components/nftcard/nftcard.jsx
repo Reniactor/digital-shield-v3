@@ -26,14 +26,21 @@ const Nftcard = ({
     contract,
     "release"
   );
-
+  // Unix timestamp for each of the cards
   const [epochTime, setEpochTime] = useState(NaN);
+  // Hours for the countdown within the component
   const [hours, setHours] = useState("");
+  // Minutes for the countdown within the component
   const [minutes, setMinutes] = useState("");
+  // Seconds for the countdown within the component
   const [seconds, setSeconds] = useState("");
+  // Releasable or not depending on the component countdown
   const [releasable, setReleasable] = useState(false);
+
+  // User address
   const address = useAddress();
 
+  //Function to process each card hours, minutes and seconds left
   function getTimeUntil(timestamp) {
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const timeDifference = timestamp - currentTimestamp;
@@ -60,7 +67,7 @@ const Nftcard = ({
     setMinutes(minutesString);
     setSeconds(secondsString);
   }
-
+  // Getting the contract data to use in the card
   const {
     data: contractData,
     isLoading: contractDataIsLoading,
@@ -70,45 +77,50 @@ const Nftcard = ({
       subscribe: true,
     },
   });
-
+  // UseEffect to process the contract data, setting the block.timestamp to the EpochTime
   useEffect(() => {
     const getContractData = async () => {
+      // If contract data isn't loading, execute code
       if (contractDataIsLoading === false) {
         try {
+          // Getting the raw data first
           const rawData = await contractData;
+          // Using an array to store the data retrieved
           const dataToProcess = [];
+          // Using a map to iterate through the array as that's what i thought of at the moment honestly
           rawData.map((element) =>
+            // element ID comes as a hex, so it gets parsed to decimal to compare it against the ID
             parseInt(element.data.lockId._hex, 16) === id
-              ? dataToProcess.push(element.data)
+              ? // It would then get pushed to the previous array
+                dataToProcess.push(element.data)
               : null
           );
+          // EpochTime gets set to the releaseTime found within the element that's in the dataToProcess array
           setEpochTime(parseInt(dataToProcess[0].releaseTime._hex, 16));
         } catch (error) {
+          // Error handling
           console.log(error);
         }
       }
     };
+
     getContractData();
   }, [contractDataIsLoading]);
 
-  useEffect(() => {
-    console.log(epochTime);
-    if (epochTime > 0) {
-      getTimeUntil(epochTime);
-    }
-  }, [epochTime]);
-
+  // An useEffect to make sure the countdown gets updated every second
   useEffect(() => {
     const interval = setInterval(() => {
       const unixTime = epochTime;
       getTimeUntil(unixTime);
     }, 1000);
 
+    // Clearing the interval by the end of it
     return () => {
       clearInterval(interval);
     };
   }, [epochTime]);
 
+  // Release click button handler
   const handleReleaseClick = async () => {
     try {
       await mutateAsync({

@@ -37,7 +37,9 @@ export default function NavBar() {
     gap-2
     fixed
     top-0
-    left-0"
+    left-0
+    z-50
+    "
     >
       <Link href="/">
         <Image src={logo} alt="logo" className="h-12 w-auto" priority />

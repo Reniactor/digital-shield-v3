@@ -188,7 +188,10 @@ function SubmitNFT() {
       }
       const storage = getStorage();
       const originalFileName = imageFile.name;
-      const imageStorageRef = ref(storage, `images/${originalFileName}`); // Store the image with the original file name
+      const imageStorageRef = ref(
+        storage,
+        `images/${originalFileName + `${randomNumber}`}`
+      ); // Store the image with the original file name
       const imageSnapshot = await uploadBytes(imageStorageRef, imageFile);
 
       // Get the download URL of the uploaded image
