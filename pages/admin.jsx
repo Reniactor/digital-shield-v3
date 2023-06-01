@@ -148,49 +148,45 @@ const Admin = () => {
   const handleAddFundsButtonClick = async () => {};
   return (
     <>
-      {walletAddress != adminAddress ? (
-        <Custom404 />
-      ) : (
-        <main className="bg-background-color-website min-h-screen h-screen min-w-screen flex items-center">
-          <NavBar />
-          <div className="w-full h-3/5 flex flex-col items-center justify-around">
-            {contractDataIsLoading ? (
-              <h1 className="text-center text-titleWhite text-2xl font-medium font-trispace">
-                Loading...
-              </h1>
-            ) : (
-              <h1 className="text-center text-titleWhite text-2xl font-medium font-trispace">
-                Available amount: ${amountToBeWithdrawn || 0}
-              </h1>
-            )}
-            <form className="w-3/5 flex items-center justify-around">
-              <div className="h-12 flex justify-center items-center">
-                <button
-                  type="button"
-                  onClick={handleWithdrawFundsButtonClick}
-                  className="font-medium h-full min-w-[8rem] rounded-md bg-header-background-color text-blue-accent hover:bg-white hover:text-header-background-color duration-500"
-                >
-                  Withdraw Funds
-                </button>
-              </div>
-              <div className="h-12 flex justify-center items-center">
-                <input
-                  id="addFunds"
-                  type="number"
-                  className="h-full rounded-tl-md rounded-bl-md text-center focus:outline-none"
-                  placeholder="Add Funds"
-                />
-                <button
-                  onClick={handleAddFundsButtonClick}
-                  className="font-medium h-full min-w-[8rem] rounded-tr-md rounded-br-md bg-header-background-color text-blue-accent hover:bg-white hover:text-header-background-color duration-500"
-                >
-                  Add Funds
-                </button>
-              </div>
-            </form>
-          </div>
-        </main>
-      )}
+      <main className="bg-background-color-website min-h-screen h-screen min-w-screen flex items-center">
+        <NavBar />
+        <div className="w-full h-3/5 flex flex-col items-center justify-around">
+          {contractDataIsLoading ? (
+            <h1 className="text-center text-titleWhite text-2xl font-medium font-trispace">
+              Loading...
+            </h1>
+          ) : (
+            <h1 className="text-center text-titleWhite text-2xl font-medium font-trispace">
+              Available amount: ${amountToBeWithdrawn || 0}
+            </h1>
+          )}
+          <form className="w-3/5 flex items-center justify-around">
+            <div className="h-12 flex justify-center items-center">
+              <button
+                type="button"
+                onClick={handleWithdrawFundsButtonClick}
+                className="font-medium h-full min-w-[8rem] rounded-md bg-header-background-color text-blue-accent hover:bg-white hover:text-header-background-color duration-500"
+              >
+                Withdraw Funds
+              </button>
+            </div>
+            <div className="h-12 flex justify-center items-center">
+              <input
+                id="addFunds"
+                type="number"
+                className="h-full rounded-tl-md rounded-bl-md text-center focus:outline-none"
+                placeholder="Add Funds"
+              />
+              <button
+                onClick={handleAddFundsButtonClick}
+                className="font-medium h-full min-w-[8rem] rounded-tr-md rounded-br-md bg-header-background-color text-blue-accent hover:bg-white hover:text-header-background-color duration-500"
+              >
+                Add Funds
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
     </>
   );
 };
