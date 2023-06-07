@@ -166,10 +166,9 @@ const Nftcard = ({
               "sentFormData",
               sentFormDataId
             );
-            await updateDoc(sentFormDataDocRef, {
-              claimed: true,
-            });
-            setIsClaimed(true);
+
+            await updateDoc(sentFormDataDocRef, { claimed: true });
+            // Perform any additional actions or state updates after the updateDoc call
           }
         });
       });
