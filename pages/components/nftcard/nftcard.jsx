@@ -6,6 +6,14 @@ import {
 } from "@thirdweb-dev/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 
 const Nftcard = ({
   imageURL,
@@ -16,6 +24,7 @@ const Nftcard = ({
   claimable,
   claimed,
   id,
+  show,
 }) => {
   // Get the contract address
   const { contract } = useContract(
@@ -26,6 +35,8 @@ const Nftcard = ({
     contract,
     "release"
   );
+  // Get current state of claimed
+  const [isClaimed, setIsClaimed] = useState(claimed);
   // Unix timestamp for each of the cards
   const [epochTime, setEpochTime] = useState(NaN);
   // Hours for the countdown within the component
@@ -126,10 +137,44 @@ const Nftcard = ({
       await mutateAsync({
         args: [id],
       });
+      const usersCollectionRef = collection(db, "users");
+      const userQuery = query(usersCollectionRef);
+      const userQuerySnapshot = await getDocs(userQuery);
+
+      userQuerySnapshot.forEach(async (userDoc) => {
+        const userId = userDoc.id;
+        const sentFormDataCollectionRef = collection(
+          usersCollectionRef.doc(userId),
+          "sentFormData"
+        );
+        const sentFormDataQuerySnapshot = await getDocs(
+          sentFormDataCollectionRef
+        );
+
+        sentFormDataQuerySnapshot.forEach(async (sentFormDataDoc) => {
+          const sentFormDataId = sentFormDataDoc.id;
+          const sentFormDataData = sentFormDataDoc.data();
+
+          if (sentFormDataData.lockId === id) {
+            const sentFormDataDocRef = doc(
+              usersCollectionRef.doc(userId),
+              "sentFormData",
+              sentFormDataId
+            );
+
+            await updateDoc(sentFormDataDocRef, { claimed: true });
+            // Perform any additional actions or state updates after the updateDoc call
+          }
+        });
+      });
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    setIsClaimed(claimed);
+  }, [claimed]);
 
   return (
     <div
@@ -158,9 +203,9 @@ const Nftcard = ({
       />
       <div className="w-4/5 flex flex-col items-center">
         <h1>To dos:</h1>
-        <h2>{param1}</h2>
-        <h2>{param2}</h2>
-        <h2>{param3}</h2>
+        <h2 className="text-center text-sm font-medium">{param1}</h2>
+        <h2 className="text-center text-sm font-medium">{param2}</h2>
+        <h2 className="text-center text-sm font-medium">{param3}</h2>
       </div>
       <div className="w-4/5 flex flex-col items-center">
         {hours && minutes && seconds ? (
@@ -176,30 +221,42 @@ const Nftcard = ({
         <h1>Crypto amount:</h1>
         <h2>{cryptoAmount}</h2>
       </div>
-      {isLoading ? (
-        <button
-          type="button"
-          className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
-          disabled
-        >
-          Loading...
-        </button>
-      ) : releasable ? (
-        <button
-          type="button"
-          className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
-          onClick={handleReleaseClick}
-        >
-          Release!
-        </button>
-      ) : releasable == false ? (
-        <button
-          type="button"
-          className="rounded-md w-24 h-12 bg-red-900 text-titleWhite hover:bg-titleWhite hover:text-red-900  duration-500"
-          disabled
-        >
-          Not yet!
-        </button>
+      {show ? (
+        isLoading ? (
+          <button
+            type="button"
+            className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
+            disabled
+          >
+            Loading...
+          </button>
+        ) : isClaimed ? (
+          <button
+            type="button"
+            className="rounded-md w-24 h-12 bg-gray-400 text-titleWhite cursor-not-allowed"
+            disabled
+          >
+            Already Released
+          </button>
+        ) : releasable ? (
+          <button
+            type="button"
+            className="rounded-md w-24 h-12 bg-header-background-color text-titleWhite hover:bg-titleWhite hover:text-header-background-color duration-500"
+            onClick={handleReleaseClick}
+          >
+            Release!
+          </button>
+        ) : releasable == false ? (
+          <button
+            type="button"
+            className="rounded-md w-24 h-12 bg-red-900 text-titleWhite hover:bg-titleWhite hover:text-red-900  duration-500"
+            disabled
+          >
+            Not yet!
+          </button>
+        ) : (
+          ""
+        )
       ) : (
         ""
       )}
