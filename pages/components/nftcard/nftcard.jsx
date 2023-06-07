@@ -169,6 +169,7 @@ const Nftcard = ({
             await updateDoc(sentFormDataDocRef, {
               claimed: true,
             });
+            setIsClaimed(true);
           }
         });
       });
