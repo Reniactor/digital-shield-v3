@@ -14,6 +14,7 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
+import { db } from "../../../config/firebaseConfig";
 
 const Nftcard = ({
   imageURL,
@@ -138,13 +139,13 @@ const Nftcard = ({
         args: [id],
       });
       const usersCollectionRef = collection(db, "users");
-      const userQuery = query(usersCollectionRef);
-      const userQuerySnapshot = await getDocs(userQuery);
+      const userQuerySnapshot = await getDocs(usersCollectionRef);
 
       userQuerySnapshot.forEach(async (userDoc) => {
         const userId = userDoc.id;
         const sentFormDataCollectionRef = collection(
-          usersCollectionRef.doc(userId),
+          usersCollectionRef,
+          userId,
           "sentFormData"
         );
         const sentFormDataQuerySnapshot = await getDocs(
@@ -155,15 +156,19 @@ const Nftcard = ({
           const sentFormDataId = sentFormDataDoc.id;
           const sentFormDataData = sentFormDataDoc.data();
 
-          if (sentFormDataData.lockId === id) {
+          const lockId = sentFormDataData.lockId;
+
+          if (lockId === id) {
             const sentFormDataDocRef = doc(
-              usersCollectionRef.doc(userId),
+              db,
+              "users",
+              userId,
               "sentFormData",
               sentFormDataId
             );
-
-            await updateDoc(sentFormDataDocRef, { claimed: true });
-            // Perform any additional actions or state updates after the updateDoc call
+            await updateDoc(sentFormDataDocRef, {
+              claimed: true,
+            });
           }
         });
       });
