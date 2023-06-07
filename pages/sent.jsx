@@ -55,18 +55,25 @@ const Sent = () => {
   return (
     <div className="min-h-screen min-w-screen bg-background-color-website">
       <NavBar />
-      <div className="flex justify-around items-center pt-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-9 pt-16 w-full">
         {sentFormData.map((data) => (
           <Nftcard
             key={data.lockId}
             imageURL={data.imageURL}
-            param1={data.firstParameter}
-            param2={data.secondParameter}
-            param3={data.thirdParameter}
+            param1={
+              data.firstParameter == "No selection" ? "" : data.firstParameter
+            }
+            param2={
+              data.secondParameter == "No selection" ? "" : data.secondParameter
+            }
+            param3={
+              data.thirdParameter == "No selection" ? "" : data.thirdParameter
+            }
             cryptoAmount={data.cryptoAmount}
             claimable={data.claimable}
             claimed={data.claimed}
             id={data.lockId}
+            show={true}
           />
         ))}
       </div>
