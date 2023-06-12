@@ -10,6 +10,8 @@ import {
   useContractRead,
   useContractWrite,
   useContractEvents,
+  useChainId,
+  ChainId,
 } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 import { useAddress } from "@thirdweb-dev/react";
@@ -60,7 +62,8 @@ function SubmitNFT() {
     isLoading: useContractEventsIsLoading,
     error: useContractEventsError,
   } = useContractEvents(contract, "LockCreated");
-
+  const chainId = useChainId();
+  const correctChain = 137;
   useEffect(() => {
     const getUsers = async () => {
       try {
@@ -322,6 +325,10 @@ function SubmitNFT() {
         {!address ? (
           <div className="text-2xl font-bold text-center">
             Please Connect Your Wallet
+          </div>
+        ) : chainId != correctChain ? (
+          <div className="text-2xl font-bold text-center">
+            Please Switch To Polygon Mainnet to use This Page
           </div>
         ) : (
           <form
@@ -730,6 +737,10 @@ function SubmitNFT() {
         {!address ? (
           <div className="text-2xl font-bold text-center">
             Please Connect Your Wallet
+          </div>
+        ) : chainId != correctChain ? (
+          <div className="text-2xl font-bold text-center">
+            Please Switch To Polygon Mainnet to use This Page
           </div>
         ) : (
           <form
