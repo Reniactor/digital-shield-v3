@@ -1,4 +1,4 @@
-import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
+import { ChainId, ThirdwebProvider, useChainId } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import Head from "next/head";
 import { Polygon } from "@thirdweb-dev/chains";
